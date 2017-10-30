@@ -1,0 +1,2 @@
+#!/bin/sh
+exec $SNAP/usr/local/bin/elixir -e Mix.start -e Mix.CLI.main $@

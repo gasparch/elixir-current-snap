@@ -1,0 +1,90 @@
+name: elixir-current
+version: '1.6' # just for humans, typically '1.2+git' or '1.3.2'
+architectures: [amd64]
+summary: Elixir current version # 79 char long summary
+description: |
+  This is my-snap's description. You have a paragraph or two to tell the
+  most important story about your snap. Keep it under 100 words though,
+  we live in tweetspace and your description wants to look good in the snap
+  store.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: classic # use 'strict' once you have the right plugs and slots
+
+apps:
+  elixir:
+    command: usr/local/bin/elixir
+    plugs: [home]
+
+  elixirc:
+    command: usr/local/bin/elixirc
+    plugs: [home]
+
+  iex:
+    command: usr/local/bin/iex
+    plugs: [home]
+
+  mix:
+    command: usr/local/bin/mix
+    plugs: [home]
+
+parts:
+  elixir:
+    plugin: make
+    source: https://github.com/elixir-lang/elixir.git
+    source-depth: 1
+    source-branch: master
+    #after: [erlangpackage]
+    organize:
+      usr/local/lib/elixir/bin/mix: tmp/removed1
+      usr/local/bin/mix: tmp/removed2
+    #build-packages:
+    #  - erlang-dev
+    #  - erlang-base
+    #  - erlang-parsetools
+    stage:
+      - -tmp/
+      - usr/local
+    prime:
+      - usr/local/bin
+      - usr/local/share
+      - usr/local/lib/elixir/lib
+      - usr/local/lib/elixir/bin/elixir
+      - usr/local/lib/elixir/bin/elixirc
+      - usr/local/lib/elixir/bin/iex
+
+  #erlangrepo:
+  #  plugin: nil
+  #  prepare: |
+  #    apt install -y wget
+  #    wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+  #    dpkg -i erlang-solutions_1.0_all.deb
+  erlangpackage:
+    plugin: nil
+    #after: [erlangrepo]
+    #build-packages:
+    #  - erlang-dev
+    #  - erlang-base
+    #  - erlang-parsetools
+    #  - git
+    #stage-packages:
+    #  - erlang-base
+      #- erlang-dev
+      #- erlang-parsetools
+    #stage:
+    #  - -usr/lib/erlang/bin/erl
+    prime:
+      - -usr/lib/erlang/bin/erl
+
+  resources:
+    after: [elixir]
+    plugin: dump
+    source: resources
+    organize:
+      bin/mix: usr/local/bin/mix
+      bin/dummy-mix: usr/local/lib/elixir/bin/mix
+      bin/snap-erl: usr/lib/erlang/bin/erl
+    prime:
+      - usr/local/bin/mix
+      - usr/local/lib/elixir/bin/mix
+      - usr/lib/erlang/bin/erl
