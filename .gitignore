@@ -1,0 +1,4 @@
+snap/elixir-current*.snap
+ubuntu*.log
+.vagrant/
+*.swp
